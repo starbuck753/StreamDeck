@@ -28,6 +28,7 @@ bool pstate = false;
 
 int8_t cont = 0, prevcont = 0, encoderstate = 0;
 int16_t left = 0, right = 0, prevleft = 0, prevright = 0;
+bool turnleft = false, turnright = false;
 
 
 // the setup function runs once when you press reset or power the board
@@ -45,12 +46,17 @@ void setup() {
 
   //Keyboard.begin();
 
-  pinMode(ENCODER1_PIN_L, INPUT);
-  pinMode(ENCODER1_PIN_R, INPUT);
+  pinMode(ENCODER1_PIN_L, INPUT_PULLUP);
+  pinMode(ENCODER1_PIN_R, INPUT_PULLUP);
  
   pinMode(6, OUTPUT);
   pinMode(7, OUTPUT);
   pinMode(8, OUTPUT);
+
+  pinMode(11, OUTPUT);
+  pinMode(12, OUTPUT);
+  digitalWrite(11,LOW);
+  digitalWrite(12,LOW);
 
 
   digitalWrite(6, HIGH);
@@ -85,6 +91,11 @@ void setup() {
   display.setTextSize(1);
   display.display();
 
+  left = digitalRead(ENCODER1_PIN_L);
+  right = digitalRead(ENCODER1_PIN_R);
+  prevleft = left;
+  prevright = right;
+
 }
 
 // the loop function runs over and over again forever
@@ -98,11 +109,6 @@ void loop() {
   digitalWrite(7, buttons.repeat(BUTTON_2));
   digitalWrite(8, buttons.repeat(BUTTON_3));
 
-  //digitalWrite(8, buttons.pressed(BUTTON_1));
-  //digitalWrite(8, buttons.pressed(BUTTON_2));
-
-
-
   pstate = cstate;
 
   if (buttons.states[BUTTON_1] == 1)
@@ -111,18 +117,11 @@ void loop() {
     cstate = false;
   
 
-  /*if (cstate != pstate){
-    digitalWrite(8, cstate);
-    display.setCursor(0,10);
-    display.print(cstate);
-    display.display();
-  }*/
-
 
   //Encoder Test!
   left = digitalRead(ENCODER1_PIN_L);
   right = digitalRead(ENCODER1_PIN_R);
-
+  
   //Encoder was activated and got to the middle point
   if (left && right) {
     //Check the different combinations (we look at the previous vale to know to which side it turned)
@@ -140,34 +139,25 @@ void loop() {
   else if (!(left || right) && encoderstate) {
     encoderstate = false;
   }
-
-  prevleft = left, prevright = right;
+  
 
   if (cont != prevcont){
     display.clearDisplay();
     display.setCursor(10,20);
     display.print(cont);
     display.display();
+
+    if (cont > prevcont){
+      digitalWrite(11,HIGH);
+      digitalWrite(12,LOW);
+    }
+    else{
+      digitalWrite(12,HIGH);
+      digitalWrite(11,LOW);
+    }
   }
 
-  prevcont = cont;
-  
-
-  //Set the cursor coordinates
-  /*display.clearDisplay();
-  display.setTextSize(1);
-  display.setCursor(0,10);
-  display.print("1:");
-  display.setCursor(20,10);
-  display.print(buttons.states[0]);
-
-  display.setCursor(0,20);
-  display.print("2:");
-  display.setCursor(20,20);
-  display.print(buttons.states[1]);
-
-  display.display();*/
-
+  prevcont = cont, prevright = right, prevleft = left;
 
 }
 
