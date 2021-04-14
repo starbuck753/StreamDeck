@@ -2,23 +2,34 @@
 
 
 void Profiles::begin(){
-
+  
+  //Set up the encoder we use for the profiles
+  encoder.begin(ENCODERPROFILE);
 
 }
 
 void Profiles::update(){
+  
+  //Update the encoder
+  encoder.update();
 
+  isUpdated = encoder.updated();
 
+  //When encoder updates, we need to set the new set of keys for the profile
+  if (isUpdated){
+    current = encoder.getCurrent();
+  
+  
+  
+  
+  }
 
 }
 
-
-
-void Profiles::setProfile(uint8_t profile){
-  current = profile;
-
+bool Profiles::updated(){
+  return isUpdated;
 }
 
-uint8_t Profiles::getProfile(){
+uint8_t Profiles::getCurrent(){
   return current;
 }

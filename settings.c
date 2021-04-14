@@ -24,6 +24,8 @@
 
 
 // - ENCODER -----------------------
+#define ENCODER1  1
+#define ENCODER2  2
 
 #define ENCODER1_PIN_L 9
 #define ENCODER1_PIN_R 10
@@ -31,11 +33,11 @@
 
 
 // - PROFILES ----------------------
-
-
-
-
+#define ENCODERPROFILE  1
 #define PROFILE1 1
+
+
+
 
 /*#define LeftCtrl    = 0x80
 #define UpArrow	    = 0xDA
