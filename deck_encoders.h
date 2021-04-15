@@ -11,15 +11,17 @@ public:
   void begin(uint8_t encodernumber);
   void update();
   
-  bool updated();
+  bool changed();
   bool increased();
   bool decreased();
-  int8_t getCurrent();
+  uint8_t getCurrent();
 
 
 private:
   uint8_t lastLeftValue, lastRightValue, pinLeft, pinRight;
-  int8_t encoder, lastEncoder, encoderState;
+  uint8_t encoder, lastEncoder, encoderState;
+  bool hasIncreased, hasDecreased;
+
 };
 
 #endif

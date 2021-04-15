@@ -3,10 +3,11 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}",
-                "${workspaceFolder}/../libraries/Adafruit_GFX_Library/**",
+                "${workspaceFolder}**",
                 "${workspaceFolder}/../libraries/Adafruit_SSD1306/**",
-                "C:/Program Files (x86)/Arduino/hardware/arduino/avr/**",
+                "C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/**",
+                "C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/**",
+                "C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/**",
                 "C:/Program Files (x86)/Arduino/hardware/tools/avr/**",
                 "C:/Program Files (x86)/Arduino/libraries/**"
             ],
@@ -27,9 +28,10 @@
             "browse": {
                 "path": [
                     "${workspaceFolder}",
-                    "${workspaceFolder}/../libraries/Adafruit_GFX_Library/",
                     "${workspaceFolder}/../libraries/Adafruit_SSD1306/",
-                    "C:/Program Files (x86)/Arduino/hardware/arduino/avr/",
+                    "C:/Program Files (x86)/Arduino/hardware/arduino/avr/libraries/",
+                    "C:/Program Files (x86)/Arduino/hardware/arduino/avr/cores/",
+                    "C:/Program Files (x86)/Arduino/hardware/arduino/avr/variants/",
                     "C:/Program Files (x86)/Arduino/hardware/tools/avr/",
                     "C:/Program Files (x86)/Arduino/libraries/"
                 ],

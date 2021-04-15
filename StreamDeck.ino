@@ -112,10 +112,10 @@ void loop() {
 
 
   //Encoder Test!
-  if (profiles.encoder.updated()){
+  if (profiles.changed()){
     display.clearDisplay();
     display.setCursor(10,20);
-    display.print(profiles.encoder.getCurrent());
+    display.print(profiles.getCurrent());
     display.display();
 
     if (profiles.encoder.increased()){

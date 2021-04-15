@@ -16,7 +16,7 @@ void Encoders::begin(uint8_t encodernumber){
   pinMode(pinRight, INPUT_PULLUP);
 
 
-  encoder = 0, lastEncoder = 0, encoderState = 0;
+  encoder = 1, lastEncoder = 1, encoderState = 0;
   lastLeftValue = 0, lastRightValue = 0;
 
 }
@@ -34,10 +34,10 @@ void Encoders::update(){
   if (leftValue && rightValue) {
     //Check the different combinations (we look at the previous vale to know to which side it turned)
     if (lastLeftValue && !lastRightValue) {   //It turned left
-      encoder--;
+      encoder = (encoder != 1) ? encoder - 1 : MAXENCODER;
     }
     else if (!lastLeftValue && lastRightValue) {   //It turned right
-      encoder++;
+      encoder = (encoder != MAXENCODER) ? encoder + 1 : 1;
     }
 
     encoderState = true;
@@ -48,24 +48,27 @@ void Encoders::update(){
     encoderState = false;
   }
 
+  
+  hasIncreased = (encoder > lastEncoder) ? true : false;
+  hasDecreased = (encoder < lastEncoder) ? true : false;
+
   lastLeftValue = leftValue;
   lastRightValue = rightValue;
   lastEncoder = encoder;
   
 }
 
-bool Encoders::updated(){
-  return (encoder != lastEncoder);
+bool Encoders::changed(){
+  return (hasDecreased || hasIncreased);
 }
 
 bool Encoders::increased(){
-  return (encoder > lastEncoder);
+  return hasIncreased;
 }
 bool Encoders::decreased(){
-  return (encoder < lastEncoder);
+  return hasDecreased;
 }
 
-
-int8_t Encoders::getCurrent(){
+uint8_t Encoders::getCurrent(){
   return encoder;
 }

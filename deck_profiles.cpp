@@ -13,10 +13,10 @@ void Profiles::update(){
   //Update the encoder
   encoder.update();
 
-  isUpdated = encoder.updated();
+  hasChanged = encoder.changed();
 
   //When encoder updates, we need to set the new set of keys for the profile
-  if (isUpdated){
+  if (hasChanged){
     current = encoder.getCurrent();
   
   
@@ -26,8 +26,8 @@ void Profiles::update(){
 
 }
 
-bool Profiles::updated(){
-  return isUpdated;
+bool Profiles::changed(){
+  return hasChanged;
 }
 
 uint8_t Profiles::getCurrent(){

@@ -31,6 +31,8 @@
 #define ENCODER1_PIN_R 10
 
 
+#define MAXENCODER 8
+
 
 // - PROFILES ----------------------
 #define ENCODERPROFILE  1

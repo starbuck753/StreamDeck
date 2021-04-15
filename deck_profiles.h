@@ -21,7 +21,7 @@ public:
   void update();
   
 
-  bool updated();
+  bool changed();
   //bool profileIncreased();
   //bool profileDecreased();
   uint8_t getCurrent();
@@ -29,7 +29,7 @@ public:
   uint16_t keys[NUM_BTN];
 
 private:
-  bool isUpdated;
+  bool hasChanged;
   uint8_t current;
 
 };
