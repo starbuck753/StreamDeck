@@ -1,7 +1,7 @@
 #include "deck_encoders.h"
 
 
-void Encoders::begin(uint8_t encodernumber){
+void Encoders::begin(uint8_t encodernumber, uint8_t max){
 
   if (encodernumber == ENCODER1) {
     pinLeft = ENCODER1_PIN_L;
@@ -16,7 +16,8 @@ void Encoders::begin(uint8_t encodernumber){
   pinMode(pinRight, INPUT_PULLUP);
 
 
-  encoder = 1, lastEncoder = 1, encoderState = 0;
+  encoder = 0, lastEncoder = -1, encoderState = 0;
+  maxencoder = max-1;
   lastLeftValue = 0, lastRightValue = 0;
 
 }
@@ -34,10 +35,10 @@ void Encoders::update(){
   if (leftValue && rightValue) {
     //Check the different combinations (we look at the previous vale to know to which side it turned)
     if (lastLeftValue && !lastRightValue) {   //It turned left
-      encoder = (encoder != 1) ? encoder - 1 : MAXENCODER;
+      encoder = (encoder != 0) ? encoder - 1 : maxencoder;
     }
     else if (!lastLeftValue && lastRightValue) {   //It turned right
-      encoder = (encoder != MAXENCODER) ? encoder + 1 : 1;
+      encoder = (encoder != maxencoder) ? encoder + 1 : 0;
     }
 
     encoderState = true;
@@ -48,7 +49,6 @@ void Encoders::update(){
     encoderState = false;
   }
 
-  
   hasIncreased = (encoder > lastEncoder) ? true : false;
   hasDecreased = (encoder < lastEncoder) ? true : false;
 

@@ -4,7 +4,9 @@
 void Profiles::begin(){
   
   //Set up the encoder we use for the profiles
-  encoder.begin(ENCODERPROFILE);
+  encoder.begin(ENCODERPROFILE, MAXPROFILE);
+
+  id = encoder.getCurrent();
 
 }
 
@@ -17,8 +19,7 @@ void Profiles::update(){
 
   //When encoder updates, we need to set the new set of keys for the profile
   if (hasChanged){
-    current = encoder.getCurrent();
-  
+    id = encoder.getCurrent();
   
   
   
@@ -30,6 +31,9 @@ bool Profiles::changed(){
   return hasChanged;
 }
 
-uint8_t Profiles::getCurrent(){
-  return current;
+uint8_t Profiles::getId(){
+  return id;
+}
+String Profiles::getName(){
+  return ProfileNameList[id];
 }

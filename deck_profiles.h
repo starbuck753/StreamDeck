@@ -7,8 +7,15 @@
 #include "settings.c"
 
 
-const uint8_t ProfileList[] = {
-  PROFILE1
+const String ProfileNameList[] = {
+  PROFILE1_NAME,
+  PROFILE2_NAME,
+  PROFILE3_NAME,
+  PROFILE4_NAME,
+  PROFILE5_NAME,
+  PROFILE6_NAME,
+  PROFILE7_NAME,
+  PROFILE8_NAME
 };
 
 
@@ -24,13 +31,15 @@ public:
   bool changed();
   //bool profileIncreased();
   //bool profileDecreased();
-  uint8_t getCurrent();
+  uint8_t getId();
+  String getName();
 
   uint16_t keys[NUM_BTN];
 
 private:
   bool hasChanged;
-  uint8_t current;
+  uint8_t id;
+  String name;
 
 };
 

@@ -1,7 +1,5 @@
 #include <Arduino.h>
 
-//#include <Keyboard.h>
-
 //Include Buttons and Profiles
 #include "deck_buttons.h"
 #include "deck_profiles.h"
@@ -14,6 +12,10 @@
 // Include Adafruit Graphics & OLED libraries
 //#include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
+
+//Include Keyboard library
+#include <Keyboard.h>
+
 
 
 // Reset pin not used but needed for library
@@ -114,8 +116,8 @@ void loop() {
   //Encoder Test!
   if (profiles.changed()){
     display.clearDisplay();
-    display.setCursor(10,20);
-    display.print(profiles.getCurrent());
+    display.setCursor(0,0);
+    display.print("PROF: " + profiles.getName());
     display.display();
 
     if (profiles.encoder.increased()){

@@ -8,7 +8,7 @@
 class Encoders {
 public:
 
-  void begin(uint8_t encodernumber);
+  void begin(uint8_t encodernumber, uint8_t max);
   void update();
   
   bool changed();
@@ -19,7 +19,7 @@ public:
 
 private:
   uint8_t lastLeftValue, lastRightValue, pinLeft, pinRight;
-  uint8_t encoder, lastEncoder, encoderState;
+  uint8_t encoder, lastEncoder, encoderState, maxencoder;
   bool hasIncreased, hasDecreased;
 
 };
