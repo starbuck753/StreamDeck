@@ -26,9 +26,16 @@ Adafruit_SSD1306 display(OLED_RESET);
 Buttons buttons;
 Profiles profiles;
 
+Encoders volumen;
+
 
 bool cstate = false;
 bool pstate = false;
+
+
+uint32_t lastVolume;
+
+
 
 
 // the setup function runs once when you press reset or power the board
@@ -43,7 +50,8 @@ void setup() {
   //Setup the buttons, encoder and profile
   buttons.begin();
   profiles.begin();
-  //profiles.setProfile(PROFILE1);
+  volumen.begin(ENCODER2,50); //We don't use the encoder number, only increased/decreased
+
 
   //Keyboard.begin();
 
@@ -95,25 +103,13 @@ void setup() {
 // the loop function runs over and over again forever
 void loop() {
 
-  //Check on buttons
+  //Update objects!
   buttons.update();
   profiles.update();
-  
-
-  digitalWrite(6, buttons.repeat(BUTTON_1));
-  digitalWrite(7, buttons.repeat(BUTTON_2));
-  digitalWrite(8, buttons.repeat(BUTTON_3));
-
-  pstate = cstate;
-
-  if (buttons.states[BUTTON_1] == 1)
-    cstate = true;
-  else
-    cstate = false;
-  
+  volumen.update();
 
 
-  //Encoder Test!
+  //Handle Profile
   if (profiles.changed()){
     display.clearDisplay();
     display.setCursor(0,0);
@@ -129,4 +125,61 @@ void loop() {
       digitalWrite(11,LOW);
     }
   }
+
+
+  //Handle keys -- this is just some test!!
+  digitalWrite(6, buttons.repeat(BUTTON_1));
+  digitalWrite(7, buttons.repeat(BUTTON_2));
+  digitalWrite(8, buttons.repeat(BUTTON_3));
+
+  pstate = cstate;
+
+  if (buttons.states[BUTTON_1] == 1)
+    cstate = true;
+  else
+    cstate = false;
+  
+
+
+
+  //Handle Volume
+  HandleVolume();
+
+
+  //Handle SIMON!!!
+  if (profiles.getName() == PROFILE_SIMON){
+    HandleSimon();
+  }
+
+
+}
+
+
+void HandleVolume(){
+
+  if(volumen.changed()){
+    display.setCursor(0,100);
+    if(volumen.increased()){
+      display.print("VOL +");
+    }
+    else{
+      display.print("VOL -");
+    }
+    display.display();
+    lastVolume = millis();
+  }
+  
+  if(millis()-lastVolume >= 200){
+    display.setCursor(0,100);
+    display.print("     ");
+    display.display();
+  }
+
+}
+
+
+void HandleSimon(){
+
+
+
 }

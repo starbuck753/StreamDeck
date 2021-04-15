@@ -20,7 +20,7 @@
 #define BUTTON_1  0
 #define BUTTON_2  1
 #define BUTTON_3  2
-#define BUTTON_3  4
+#define BUTTON_4  4
 
 
 // - ENCODER -----------------------
@@ -39,10 +39,10 @@
 
 #define PROFILE1 1
 
-#define PROFILE1_NAME "MEETING"
-#define PROFILE2_NAME "PROFILE2"
-#define PROFILE3_NAME "PROFILE3"
-#define PROFILE4_NAME "PROFILE4"
+#define PROFILE_DAILY "DAILY"
+#define PROFILE_MEET "MEETING"
+#define PROFILE_GAME "GAMING"
+#define PROFILE_SIMON "SIMON"
 #define PROFILE5_NAME "PROFILE5"
 #define PROFILE6_NAME "PROFILE6"
 #define PROFILE7_NAME "PROFILE7"
@@ -65,6 +65,21 @@ enum class Keys : uint16_t {
   RightArrow  = 0xD7
 };
 */
+
+
+// ---------------------------------
+
+// - SIMON -------------------------
+
+#define BUTTON_START  1
+#define BUTTON_RED    3
+#define BUTTON_BLUE   4
+#define BUTTON_GREEN  7
+#define BUTTON_YELLOW 8
+
+
+
+
 
 
 // ---------------------------------
