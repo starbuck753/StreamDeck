@@ -78,8 +78,12 @@ enum class Keys : uint16_t {
 #define BUTTON_YELLOW 8
 
 
-
-
+#define S_START       1
+#define S_SIMONTURN   2
+#define S_PLAYERTURN  3
+#define S_GAMEOVER    4
+#define S_PAUSED      5
+#define S_GAMEOVER    6
 
 
 // ---------------------------------
