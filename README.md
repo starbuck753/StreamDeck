@@ -31,7 +31,7 @@ There are some additional components for future enhacement (which are not curren
 
 ### Schematics
 
-![StreamDeck Bread Board diagram](/StramDeck_bb.png?raw=true)
+![StreamDeck Bread Board diagram](/StreamDeck_bb.png)
 
 
 ### The Code
