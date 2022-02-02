@@ -1,12 +1,13 @@
 #include "deck_buttons.h"
 
 void Buttons::begin() {
+    
     for (uint8_t thisButton = 0; thisButton < NUM_BTN; thisButton++) {
+        pinMode(pins[thisButton], INPUT_PULLUP);
         states[thisButton] = 0;
     }
 
 	timePerFrame = 40;
-	nextFrameMillis = timePerFrame;
 }
 
 void Buttons::update() {
@@ -72,7 +73,7 @@ boolean Buttons::held(uint8_t button, uint16_t time){
  * @return true if the button is held for the given time
  */
 boolean Buttons::repeat(uint8_t button, uint16_t period) {
-    if (period <= 1) {
+    if (period == 0) {
         if ((states[button] != 0xFF) && (states[button]))
             return true;
     } else {

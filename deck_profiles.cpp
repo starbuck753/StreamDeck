@@ -4,9 +4,9 @@
 void Profiles::begin(){
   
   //Set up the encoder we use for the profiles
-  encoder.begin(ENCODERPROFILE, MAXPROFILE);
+  encoder.begin(ENCODERPROFILE, 0, MAXPROFILE);
 
-  id = encoder.getCurrent();
+  setCurrent(encoder.getCurrent());
 
 }
 
@@ -19,9 +19,7 @@ void Profiles::update(){
 
   //When encoder updates, we need to set the new set of keys for the profile
   if (hasChanged){
-    id = encoder.getCurrent();
-  
-  
+    setCurrent(encoder.getCurrent());
   
   }
 
@@ -36,4 +34,15 @@ uint8_t Profiles::getId(){
 }
 String Profiles::getName(){
   return ProfileNameList[id];
+}
+
+
+void Profiles::setCurrent(uint8_t current){
+
+  id = current;
+
+  for (uint8_t n=0; n<NUM_BTN; n++){
+    currentKeys[n] = DailyKeys[n];
+  }
+
 }

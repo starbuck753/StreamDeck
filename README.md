@@ -1,5 +1,7 @@
 # StreamDeck
 
+![StreamDeck photo](/StreamDeck_photo.jpg)
+
 **This is still a work in progress** 
 
 ### Why the Stream Deck?
