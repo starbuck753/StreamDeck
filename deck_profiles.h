@@ -79,7 +79,7 @@ const Key KeySrch {"SRCH", false, KEY_LCTRL, 0x65, 0};
 
 
 // Gaming
-/*const Key KeyShft {"SHFT", false, KEY_LSHIFT, 0, 0};
+const Key KeyShft {"SHFT", false, KEY_LSHIFT, 0, 0};
 const Key KeyUp   {" UP ", false, KEY_UP, 0, 0};
 const Key KeyCtrl {"CTRL", false, KEY_LCTRL, 0, 0};
 //const Key KeyBlur {"SHFT", true, 0x00, 0x00, 0x00};
@@ -87,7 +87,7 @@ const Key KeyCtrl {"CTRL", false, KEY_LCTRL, 0, 0};
 const Key KeyLeft {"LEFT", false, KEY_LEFT, 0, 0};
 const Key KeyDown {"DOWN", false, KEY_DOWN, 0, 0};
 const Key KeyRght {"RGHT", false, KEY_RGHT, 0, 0};
-const Key KeySpce {"SPCE", false, KEY_SPACE, 0, 0};*/
+const Key KeySpce {"SPCE", false, KEY_SPACE, 0, 0};
 
 
 const Key DailyKeys[] = {
@@ -114,7 +114,7 @@ const Key MeetingKeys[] = {
   KeySrch
 };
 
-/*
+
 const Key GamingKeys[] = {
   KeyLock,
   KeyShft,
@@ -126,7 +126,7 @@ const Key GamingKeys[] = {
   KeyRght,
   KeySpce
 };
-*/
+
 
 // ----------------------------------------
 

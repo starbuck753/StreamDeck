@@ -80,7 +80,7 @@ void Profiles::setCurrent(uint8_t current){
         currentKeys[n] = MeetingKeys[n];
         break;
       case ProfileName::Gaming:
-        //currentKeys[n] = GamingKeys[n];
+        currentKeys[n] = GamingKeys[n];
         break;
       case ProfileName::Simon:
         currentKeys[n] = {};

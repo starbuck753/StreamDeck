@@ -105,7 +105,7 @@ static const uint8_t HID_ReportDescriptor_ConsumerControl[] PROGMEM =
 
 
 
-bool ppFirstTime = true, muteHeld = false;
+bool ppFirstTime = true, buttonHeld = false;
 
 //To clear up the Profile and Volume display
 uint16_t contVolume = 0, timeVolume = 5000;
@@ -126,24 +126,6 @@ void printText(char* text, int16_t x, int16_t y, uint8_t size, bool clear = fals
   display.display();
 
 };
-
-/*void printTopLine(String textLeft = "", String textRight = "", bool clear = false) {
-  
-  if (clear){
-    display.clearDisplay();
-  }
-
-  display.setTextSize(1);
-
-  display.setCursor(0, 0);
-  display.print(textLeft);
-
-  display.setCursor(1 + (21 - textRight.length()) * 6, 0);
-  display.print(textRight);
-
-  display.display();
-
-};*/
 
 // ------------------------------------------------------------
 
@@ -306,14 +288,14 @@ void loop() {
     PrintProfile();
     ppFirstTime = false;
     contProfile = 1;
-    muteHeld = buttons.held(BUTTON_1, 25) ? true : false;
+    buttonHeld = buttons.held(BUTTON_1, 25) ? true : false;
   }
 
   //Handle keys
   for (uint8_t n=0; n<NUM_BTN; n++){
     if(buttons.released(n)){
-      if (muteHeld) {
-        muteHeld = false;
+      if (buttonHeld) {
+        buttonHeld = false;
       }
       else{
         display.clearDisplay();
