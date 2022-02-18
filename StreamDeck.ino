@@ -284,7 +284,14 @@ void loop() {
 
 
   //Handle Profile
-  if (profiles.changed() || ppFirstTime || buttons.held(BUTTON_1, 25)){
+  if (profiles.changed() || ppFirstTime){
+    printText(profiles.getName(), 10, 10, 2, true);
+    ppFirstTime = false;
+    contProfile = 1;
+  }
+
+  // Button one Held: shows profile help!
+  if (buttons.held(BUTTON_1, 25)){
     PrintProfile();
     ppFirstTime = false;
     contProfile = 1;
