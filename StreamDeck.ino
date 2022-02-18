@@ -1,10 +1,27 @@
+/*
+  Copyright (c) 2022, Starbuck753
+  Original code (pre-library): Copyright (c) 2011, Peter Barrett
+
+  Permission to use, copy, modify, and/or distribute this software for
+  any purpose with or without fee is hereby granted, provided that the
+  above copyright notice and this permission notice appear in all copies.
+
+  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL
+  WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED
+  WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR
+  BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES
+  OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS,
+  WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION,
+  ARISING OUT OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS
+  SOFTWARE.
+ */
+
 #include <Arduino.h>
 
 //Include Buttons and Profiles
 #include "deck_buttons.h"
 #include "deck_profiles.h"
 #include "deck_encoders.h"
-
 
 
 // Include Wire Library for I2C
@@ -14,7 +31,7 @@
 #include <Adafruit_SSD1306.h>
 
 //Include Keyboard library
-//#include <Keyboard.h>
+#include <Keyboard.h>
 
 
 // Reset pin not used but needed for library
@@ -27,6 +44,67 @@ Profiles profiles;
 Encoders volume;
 
 
+//For Media buttons!
+uint8_t data[2];
+
+// For direct use of USB HID (yes, 3 is left out)
+const uint8_t kHID_ReportID_ConsumerControl =  4;
+
+static const uint8_t HID_ReportDescriptor_ConsumerControl[] PROGMEM =
+{
+    0x05, 0x0c,                           // Usage Page ("Consumer Devices")
+    0x09, 0x01,                           // Usage (Consumer Control)
+    0xa1, 0x01,                           // Collection (Application)
+    0x85, kHID_ReportID_ConsumerControl,  // "Report ID"
+    0x15, 0x00,                           // Logical Minimum (0)
+    0x25, 0x01,                           // Logical Maximum (1)
+    0x09, 0xe9,                           // Usage (Volume Up)
+    0x09, 0xea,                           // Usage (Volume Down)
+    0x75, 0x01,                           // Report Size (1)
+    0x95, 0x02,                           // Report Count (2)
+    0x81, 0x06,                           // Input (Data, Variable, Relative)
+
+    0x09, 0xe2,                           // Usage (Mute)
+    0x95, 0x01,                           // Report Count (1)
+    0x81, 0x06,                           // Input (Data, Variable, Relative)
+
+    0x09, 0xcd,                           // Usage (Play/Pause)
+    //0x09, 0xb0,                           // Usage (Play/Pause)
+    0x95, 0x01,                           // Report Count (1)
+    0x81, 0x06,                           // Input (Data, Variable, Relative)
+
+    0x09, 0x192,                           // Usage (CALC)
+    //0x09, 0xb1,                           // Usage (Pause)
+    0x95, 0x01,                           // Report Count (1)
+    0x81, 0x06,                           // Input (Data, Variable, Relative)
+
+    0x09, 0xb7,                           // Usage (Stop)
+    0x95, 0x01,                           // Report Count (1)
+    0x81, 0x06,                           // Input (Data, Variable, Relative)
+
+    0x09, 0xb5,                           // Usage (Next)
+    0x95, 0x01,                           // Report Count (1)
+    0x81, 0x06,                           // Input (Data, Variable, Relative)
+
+    0x09, 0xb6,                           // Usage (Previous)
+    0x95, 0x01,                           // Report Count (1)
+    0x81, 0x06,                           // Input (Data, Variable, Relative)
+
+    0x09, 0xb3,                           // Usage (Fast Forward)
+    0x95, 0x01,                           // Report Count (1)
+    0x81, 0x06,                           // Input (Data, Variable, Relative)
+
+    0x09, 0xb4,                           // Usage (Rewind)
+    0x95, 0x01,                           // Report Count (1)
+    0x81, 0x06,                           // Input (Data, Variable, Relative)
+
+    0x95, 0x06,                           // Report Count (6) Number of bits remaining in byte
+    0x81, 0x07,                           // Input (Constant, Variable, Relative)
+    0xc0                                  // End Collection
+}; // Table for USB HID "Consumer Control" (for audio volume control, etc.)
+
+
+
 bool ppFirstTime = true, muteHeld = false;
 
 //To clear up the Profile and Volume display
@@ -37,7 +115,7 @@ uint16_t contProfile = 0, timeProfile = 10000;
 
 // -- To easily print text! -----------------------------------
 
-void printText(String text, int16_t x, int16_t y, uint8_t size, bool clear = false) {
+void printText(char* text, int16_t x, int16_t y, uint8_t size, bool clear = false) {
   
   if (clear){
     display.clearDisplay();
@@ -49,7 +127,7 @@ void printText(String text, int16_t x, int16_t y, uint8_t size, bool clear = fal
 
 };
 
-void printTopLine(String textLeft = "", String textRight = "", bool clear = false) {
+/*void printTopLine(String textLeft = "", String textRight = "", bool clear = false) {
   
   if (clear){
     display.clearDisplay();
@@ -65,7 +143,24 @@ void printTopLine(String textLeft = "", String textRight = "", bool clear = fals
 
   display.display();
 
-};
+};*/
+
+// ------------------------------------------------------------
+
+// -- Handle Media Keys ---------------------------------------
+
+void mediaKeyPress(uint8_t key){
+  data[0] = key;
+  data[1] = 0;
+  HID().SendReport(kHID_ReportID_ConsumerControl, data, 2);
+}
+
+void mediaKeyRelease(){
+  data[0] = KEY_MEDIA_CLEAR;
+  data[1] = 0;
+  HID().SendReport(kHID_ReportID_ConsumerControl, data, 2);
+}
+
 
 // ------------------------------------------------------------
 
@@ -81,7 +176,7 @@ void PrintProfile(){
   display.print(profiles.getName());
 
   uint8_t ppX, ppY;
-  String ppKeyName;
+  char* ppKeyName;
 
   for (uint8_t n=1; n<NUM_BTN; n++){
     ppX = (n <= 4) ? (32*(n-1))+3 : (32*(n-5))+3;
@@ -114,7 +209,20 @@ void PrintProfile(){
 void HandleVolume(){
   
   if(volume.changed()){
-    String text = (volume.increased()) ? "VOL +" : "VOL -";
+    char* text;
+
+    if (volume.increased()){
+      text = "VOL +";
+      mediaKeyPress(KEY_VOLUME_UP);
+      delay(100);
+      mediaKeyRelease();
+    }
+    else {
+      text = "VOL -";
+      mediaKeyPress(KEY_VOLUME_DOWN);
+      delay(100);
+      mediaKeyRelease();
+    }
     printText(text, 97, 0, 1);
 
     contVolume = 1;
@@ -138,12 +246,15 @@ void HandleSimon(){
 
 }
 
+
 // ------------------------------------------------------------
 
 
 
 // the setup function runs once when you press reset or power the board
 void setup() {
+
+  //Serial.begin(9600);
 
   // Start Wire library for I2C 
   Wire.begin();
@@ -157,8 +268,10 @@ void setup() {
   profiles.begin();
   volume.begin(ENCODER2,50,100); //We don't use the encoder number, only increased/decreased
 
-  
-  //Keyboard.begin();
+  // Keyboar and Medias Setup
+  Keyboard.begin();
+  static HIDSubDescriptor node(HID_ReportDescriptor_ConsumerControl, sizeof(HID_ReportDescriptor_ConsumerControl));
+  HID().AppendDescriptor(&node);
 
 
   // Clear the display
@@ -198,18 +311,36 @@ void loop() {
 
   //Handle keys
   for (uint8_t n=0; n<NUM_BTN; n++){
-      if(buttons.released(n)){
-        if (muteHeld) {
-          muteHeld = false;
-        }
-        else{
-          display.clearDisplay();
-          printText(profiles.currentKeys[n].name, 40, 10, 2);
-          contProfile = 1;
-        
-          //Executes key combination
-        }      
+    if(buttons.released(n)){
+      if (muteHeld) {
+        muteHeld = false;
       }
+      else{
+        display.clearDisplay();
+        printText(profiles.currentKeys[n].name, 40, 10, 2);
+        contProfile = 1;
+      
+        //Executes key combination
+        if (profiles.currentKeys[n].isMedia) { 
+          //If it's a media key uses the SendReport function
+          mediaKeyPress(profiles.currentKeys[n].key1);
+          delay(100);
+          mediaKeyRelease();
+        }
+        else {
+          //For the rest we use the Keyboard library
+          Keyboard.press(profiles.currentKeys[n].key1);
+          if (profiles.currentKeys[n].key2 != 0){
+            Keyboard.press(profiles.currentKeys[n].key2);
+          }
+          if (profiles.currentKeys[n].key3 != 0){
+            Keyboard.press(profiles.currentKeys[n].key3);
+          }
+          delay(100);
+          Keyboard.releaseAll();
+        }
+      }      
+    }
   }
 
 
@@ -226,7 +357,6 @@ void loop() {
 
   //Handle Volume
   HandleVolume();
-
 
 
   //Handle SIMON!!!
